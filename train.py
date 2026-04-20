@@ -80,15 +80,26 @@ def main():
 
     # Tokenize datasets
     print("\n[4/6] Tokenizing datasets...")
+    def tokenize_and_keep_labels(examples):
+        tokenized = tokenizer(
+            examples['text'],
+            padding='max_length',
+            truncation=True,
+            max_length=MAX_LENGTH
+        )
+        # Keep labels
+        tokenized['labels'] = examples['label']
+        return tokenized
+
     train_dataset = train_dataset.map(
-        lambda x: tokenize_function(x, tokenizer),
+        tokenize_and_keep_labels,
         batched=True,
-        remove_columns=train_dataset.column_names
+        remove_columns=['text']  # Remove only text, keep label
     )
     test_dataset = test_dataset.map(
-        lambda x: tokenize_function(x, tokenizer),
+        tokenize_and_keep_labels,
         batched=True,
-        remove_columns=test_dataset.column_names
+        remove_columns=['text']  # Remove only text, keep label
     )
 
     # Load model with quantization
@@ -147,7 +158,12 @@ def main():
                 loss_fct = nn.CrossEntropyLoss()
                 loss = loss_fct(logits.view(-1, self.num_labels), labels.view(-1))
 
-            return type('Output', (), {'loss': loss, 'logits': logits})()
+            # Return dict-like object that supports both dict access and attribute access
+            from transformers.modeling_outputs import SequenceClassifierOutput
+            return SequenceClassifierOutput(
+                loss=loss,
+                logits=logits,
+            )
 
         def gradient_checkpointing_enable(self, gradient_checkpointing_kwargs=None):
             """Enable gradient checkpointing on the base model"""
