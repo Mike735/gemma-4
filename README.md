@@ -2,6 +2,8 @@
 
 Prompt Injection Detection system using Google's Gemma-4-E2B model fine-tuned on the `deepset/prompt-injections` dataset.
 
+The trained model weights are hosted on Hugging Face: **[Mike0x0001/gemma-4-prompt-injection](https://huggingface.co/Mike0x0001/gemma-4-prompt-injection)**
+
 ## Features
 
 - **QLoRA Fine-tuning**: Efficient 4-bit quantized training optimized for 16GB VRAM

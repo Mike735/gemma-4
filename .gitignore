@@ -14,5 +14,9 @@ ENV/
 *.swp
 *.swo
 
-# Model cache (optional - uncomment if you don't want to track downloaded models)
-# models/
+# Large model weights — hosted on Hugging Face Hub instead
+# https://huggingface.co/Mike0x0001/gemma-4-prompt-injection
+*.safetensors
+*.pt
+*.bin
+models/gemma-4-prompt-injection/checkpoint-*/

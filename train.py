@@ -182,6 +182,7 @@ def main():
 
     # Training arguments
     # Note: bf16 disabled due to CUDA driver version issue - using fp32 instead
+    # Note: save_strategy="no" to avoid safetensors shared memory error with LoRA
     training_args = TrainingArguments(
         output_dir=OUTPUT_DIR,
         num_train_epochs=3,
@@ -190,12 +191,8 @@ def main():
         gradient_accumulation_steps=8,  # Increased to maintain effective batch size
         eval_strategy="steps",  # Updated from evaluation_strategy
         eval_steps=50,
-        save_strategy="steps",
-        save_steps=50,
-        save_total_limit=3,
-        load_best_model_at_end=True,
-        metric_for_best_model="accuracy",
-        greater_is_better=True,
+        save_strategy="no",  # Disabled due to shared tensor issue - save manually at end
+        load_best_model_at_end=False,  # Disabled since we're not saving checkpoints
         learning_rate=2e-4,
         weight_decay=0.01,
         warmup_steps=100,
@@ -219,7 +216,6 @@ def main():
         eval_dataset=test_dataset,
         data_collator=data_collator,
         compute_metrics=compute_metrics,
-        callbacks=[EarlyStoppingCallback(early_stopping_patience=3)]
     )
 
     # Train

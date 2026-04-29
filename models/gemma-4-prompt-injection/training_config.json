@@ -1,0 +1,5 @@
+{
+  "base_model": "google/gemma-4-E2B",
+  "num_labels": 2,
+  "hidden_size": 1536
+}
