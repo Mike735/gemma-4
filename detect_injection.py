@@ -11,8 +11,10 @@ import sys
 import os
 import json
 
-# Configuration
-MODEL_PATH = "./models/gemma-4-prompt-injection"
+# Configuration — prefer the continued-finetuned v2 model when present, else v1.
+MODEL_PATH_V2 = "./models/gemma-4-prompt-injection-v2"
+MODEL_PATH_V1 = "./models/gemma-4-prompt-injection"
+MODEL_PATH = MODEL_PATH_V2 if os.path.isdir(MODEL_PATH_V2) else MODEL_PATH_V1
 BASE_MODEL = "google/gemma-4-E2B"
 
 class SequenceClassificationModel(nn.Module):
